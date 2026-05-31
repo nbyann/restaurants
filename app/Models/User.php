@@ -35,5 +35,11 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed', // Gère automatiquement le hachage si nécessaire selon ta version
     ];
+    public function paniers(){
+        return $this->hasMany(Panier::class);
+    }
+    public function commandes(){
+        return $this->hasMany(Commande::class);
+    }
 }
 

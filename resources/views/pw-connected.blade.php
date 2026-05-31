@@ -813,30 +813,26 @@ setTimeout(() => {
 
 });
  
-    let afrique=document.querySelector(".afrique");
-    afrique.addEventListener("click",()=>{
-      window.location.href="/pw2";
-    });
+   // Remplacement des redirections statiques par des redirections dynamiques (Adapte les IDs 1, 2, 3 selon ta BDD)
+document.querySelector(".afrique").addEventListener("click", () => {
+  window.location.href = "/restaurant-page/1"; 
+});
 
-    let fogo=document.querySelector(".fogo");
-    fogo.addEventListener("click",()=>{
-      window.location.href="/fogo";
-    });
+document.querySelector(".brasa").addEventListener("click", () => {
+  window.location.href = "/restaurant/2";
+});
 
-    let brasa=document.querySelector(".brasa");
-    brasa.addEventListener("click",()=>{
-      window.location.href="/brasa country";
-    });
+document.querySelector(".cap").addEventListener("click", () => {
+  window.location.href = "/restaurant/3";
+});
 
-    let tagidor=document.querySelector(".tagidor");
-    tagidor.addEventListener("click",()=>{
-      window.location.href="/TAGIDOR";
-    });
+document.querySelector(".fogo").addEventListener("click", () => {
+  window.location.href = "/restaurant/4";
+});
 
-    let cap=document.querySelector(".cap");
-    cap.addEventListener("click",()=>{
-      window.location.href="/cap deli";
-    });
+document.querySelector(".tagidor").addEventListener("click", () => {
+  window.location.href = "/restaurant/5";
+});
 
     document.getElementById('accueil').addEventListener('click',()=>{
       window.location.href="/pw-connected";

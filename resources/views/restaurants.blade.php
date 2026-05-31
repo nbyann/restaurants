@@ -323,91 +323,47 @@
 
     <!-- COMMANDES -->
 
-    <section class="section" id="commandes">
-
-      <div class="section-title">
-
-        <h2>
-          Voir les commandes
-        </h2>
-
-      </div>
-
-      <div class="orders" >
-
-        <div class="order-card">
-
-          <div class="order-info">
-
-            <h3>
-              Commande #1254
-            </h3>
-
-            <p>
-              Client : Yann
-            </p>
-
-            <p>
-              2x Poulet DG
-            </p>
-
-            <p>
-              Total : 13 000 FCFA
-            </p>
-
-          </div>
-
-          <div class="order-actions">
-
-            <button class="validate-btn">
-              Valider
-            </button>
-
-            <button class="refuse-btn">
-              Refuser
-            </button>
-
-          </div>
-
-        </div>
-
-        <div class="order-card">
-
-          <div class="order-info">
-
-            <h3>
-              Commande #1288
-            </h3>
-
-            <p>
-              Client : Sarah
-            </p>
-
-            <p>
-              1x Mafé Royal
-            </p>
-
-            <p>
-              Total : 7000 FCFA
-            </p>
-
-          </div>
-
-          <div class="order-actions">
-
-            <button class="validate-btn">
-              Valider
-            </button>
-
-            <button class="refuse-btn">
-              Refuser
-            </button>
-
-          </div>
-
-        </div>
-
-      </div>
+   <section id="commandes-section" style="padding: 20px;">
+    <h3>Commandes Reçues</h3>
+    
+    <table style="width: 100%; border-collapse: collapse; margin-top: 20px; color: white;">
+        <thead>
+            <tr style="background: #222; text-align: left;">
+                <th style="padding: 10px;">ID</th>
+                <th style="padding: 10px;">Client</th>
+                <th style="padding: 10px;">Plats</th>
+                <th style="padding: 10px;">Montant</th>
+                <th style="padding: 10px;">Adresse</th>
+                <th style="padding: 10px;">Actions / Statut</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach($commandes as $commande)
+                <tr style="border-bottom: 1px solid #333;" id="row-{{ $commande->id }}">
+                    <td style="padding: 10px;">#{{ $commande->id }}</td>
+                    <td style="padding: 10px;">{{ $commande->user->name }}</td>
+                    <td style="padding: 10px;">
+                        @foreach($commande->items as $item)
+                            {{ $item->plat->name_P }} (x{{ $item->quantite }})<br>
+                        @endforeach
+                    </td>
+                    <td style="padding: 10px;">{{ $commande->montant_C }} FCFA</td>
+                    <td style="padding: 10px;">{{ $commande->adresseLivraison_C }}</td>
+                    <td style="padding: 10px;">
+                        @if($commande->status == 'en_attente')
+                            <button class="validate-btn" onclick="updateStatus({{ $commande->id }}, 'validee')" style="background: #1f9d57; color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius:3px; margin-right:5px;">Valider</button>
+                            <button class="refuse-btn" onclick="updateStatus({{ $commande->id }}, 'refusee')" style="background: #b91c1c; color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius:3px;">Refuser</button>
+                        @else
+                            <span style="font-weight: bold; color: {{ $commande->status == 'validee' ? '#1f9d57' : '#b91c1c' }};">
+                                {{ ucfirst($commande->status) }}
+                            </span>
+                        @endif
+                    </td>
+                </tr>
+            @endforeach
+        </tbody>
+    </table>
+</section>
 
     </section>
 
@@ -785,6 +741,31 @@
       });
 
     });
+
+  
+function updateStatus(orderId, newStatus) {
+    fetch(`/commande/${orderId}/status`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+        },
+        body: JSON.stringify({ status: newStatus })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if(data.success) {
+            const cell = document.querySelector(`#row-${orderId} td:last-child`);
+            if(newStatus === 'validee') {
+                cell.innerHTML = '<span style="color: #1f9d57; font-weight: bold;">Validée</span>';
+            } else {
+                cell.innerHTML = '<span style="color: #b91c1c; font-weight: bold;">Refusée</span>';
+            }
+        }
+    })
+    .catch(error => console.error('Erreur:', error));
+}
+
 
 </script>
 

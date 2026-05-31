@@ -231,7 +231,7 @@ color:#999;
     width:85px;
     font-size:18px;
     font-weight:bold;
-    cursor:pointer:
+    cursor:pointer;
 }
 .acceuil1:hover{
     transform:translateY(-5px);
@@ -249,6 +249,42 @@ flex-direction:column;
 align-items:flex-start;
 }
 
+}
+.nom-plat{
+    text-transform: capitalize;
+    font-size: 22px;
+    font-weight: 700;
+    color: #ff7a00;
+    margin-bottom: 40px;
+}
+.cart-item{
+    height: 200px;
+}
+.nom-rest{
+    font-size: 16px;
+    font-weight: bold;
+    text-transform: capitalize;
+}
+.image-plat{
+    background-color: #0b0b0b;
+    height: 120px;
+    width: 120px;
+    border-radius: 10px;
+}
+.supprimer{
+    height: 60px;
+    background-color: #ff7a00;
+    color: white;
+    font-weight: 700;
+    border: none;
+    border-radius: 10px;
+    width: 100px;
+   cursor: pointer;
+}
+.image-plat img{
+     height: 120px;
+    width: 120px;
+    border-radius: 10px;
 }
 
 </style>
@@ -291,91 +327,60 @@ Retrouvez toutes vos commandes avant validation.
 
 <!-- ITEMS -->
 
-<div class="cart-items" id="cartItems">
+<div class="container" style="margin-top: 50px;width: 1100px; margin-bottom:100px">
+    <!-- <h2>Votre Panier</h2> -->
 
-<div class="cart-item" data-price="8500">
+    @if($cartItems->isEmpty())
+        <p>Votre panier est vide.</p>
+        <a href="/pw-connected" class="btn">Retourner aux menus</a>
+    @else
+        <div id="cartItems">
+            @foreach($cartItems as $item)
+                <div class="cart-item" style="background: #111; padding: 10px; margin-bottom: 10px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+                <div class="image-plat">
+<img src="{{ $item->plat->image ? asset($item->plat->image) : asset('vendor/taro.jpg') }}" alt="{{ $item->plat->name_P }}">
 
-<div class="item-left">
+                </div>    
+                <div>
+                        <h4 class="nom-plat">{{ $item->plat->name_P }}</h4>
+                        <small class="nom-rest">Restaurant : {{ $item->plat->restaurant->name_R }}</small>
+                    </div>
+                    <div>
+                        <span>Quantité : {{ $item->quantite }}</span>
+                    </div>
+                    <div>
+                        <strong>{{ $item->plat->prix_P * $item->quantite }} FCFA</strong>
+                    </div>
+                     <!-- <button class="supprimer">Supprimer</button> -->
+                      <form action="{{route('cart.remove',$item->id)}}" method="POST" style="display: inline;">
+                        @csrf 
+                        @method('DELETE')
+                        <button type="submit" class="supprimer">Supprimer</button>
+                      </form>
+                      
+                </div>
+               
+            @endforeach
+        </div>
 
-<div class="item-image"><img src="{{ asset('vendor/taro.jpg')}}" alt="image"></div>
+        <form action="{{ route('cart.checkout') }}" method="POST" style="margin-top: 30px; background: #161616; padding: 20px; border-radius: 8px;">
+            @csrf
+            <div style="margin-bottom: 15px;width:100%;">
+                <label for="adresse" style="display:block; margin-bottom: 5px;">Adresse de livraison exacte :</label>
+                <input type="text" id="adresse" name="adresseLivraison_C" required placeholder="Ex: Rue 14, Bastos, Yaoundé" style="width: 100%; padding: 10px; background: #222; border: 1px solid #333; color: white; border-radius: 4px;">
+            </div>
 
-<div class="item-info">
-
-<h3>Taro Et Sauce Jaune</h3>
-
-<p>Le Goût d’Afrique</p>
-
-<button class="remove-btn">
-Supprimer
-</button>
-
+            <button type="submit" style="background: #ff9f43; color: black; padding: 12px 25px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer;width:100%;">
+                Confirmer et commander
+            </button>
+        </form>
+    @endif
 </div>
-
-</div>
-
-<div class="item-price">
-8500 FCFA
-</div>
-
-</div>
-
-<div class="cart-item" data-price="6500">
-
-<div class="item-left">
-
-<div class="item-image"><img src="{{ asset('vendor/dg.jpg')}}" alt="image"></div>
-
-<div class="item-info">
-
-<h3>Poulet DG</h3>
-
-<p>Le Goût d’Afrique</p>
-
-<button class="remove-btn">
-Supprimer
-</button>
-
-</div>
-
-</div>
-
-<div class="item-price">
-6500 FCFA
-</div>
-
-</div>
-
-<div class="cart-item" data-price="7000">
-
-<div class="item-left">
-
-<div class="item-image"><img src="{{ asset('vendor/we.jpg')}}" alt="image"></div>
-
-<div class="item-info">
-
-<h3>Watta Fufu and Eru</h3>
-
-<p>Le Goût d’Afrique</p>
-
-<button class="remove-btn">
-Supprimer
-</button>
-
-</div>
-
-</div>
-
-<div class="item-price">
-7000 FCFA
-</div>
-
-</div>
-
 </div>
 
 <!-- SUMMARY -->
 
-<div class="summary">
+<!-- <div class="summary">
 
 <h2>Résumé</h2>
 
@@ -421,7 +426,7 @@ Soumettre la commande
 
 </div>
 
-</section>
+</section> -->
 
 <footer>
 
